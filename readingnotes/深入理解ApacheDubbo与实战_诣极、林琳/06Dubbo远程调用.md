@@ -1,0 +1,2 @@
+1. Telnet调用原理
+ Telnet协议是TCP/IP协议族中的一员。已经测试，自己写的一个NettyServer是可以接收Telnet数据的，直接把数据转换成字符串，当作命令去处理
