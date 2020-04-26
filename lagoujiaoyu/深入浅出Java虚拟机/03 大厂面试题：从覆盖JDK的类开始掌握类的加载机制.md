@@ -37,7 +37,7 @@ public class A{
 }
 ```
     - 规则二：JVM会保证在子类的初始化方法执行前，父类的初始化方法已经执行完毕。所以JVM第一个被执行的类初始化方法一定是java.lang.Object，另外也就意味着对于类中的static语句块，父类优先于子类。
-    ```<cinit>与<init>```：```<cinit>```方法对应的是类初始化，在类加载的初始化阶段就被执行了；```<init>```方法对应的是对象初始化，在**调用构造方法**来新建对象的时候执行，用来初始化对象的属性。
+    ```<cinit>与<init> ```：```<cinit> ```方法对应的是类初始化，在类加载的初始化阶段就被执行了；```<init> ```方法对应的是对象初始化，在**调用构造方法**来新建对象的时候执行，用来初始化对象的属性。
     ![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%88%9D%E5%A7%8B%E5%8C%96.png)
 2. 类加载器
  - Bootstrap ClassLoader：启动类加载器由C++编写，随JVM启动。用来加载核心类库，如rt.jar、resource.jar、charsets.jar等，这些jar包的路径也可以通过-Xbootclasspath参数指定。
