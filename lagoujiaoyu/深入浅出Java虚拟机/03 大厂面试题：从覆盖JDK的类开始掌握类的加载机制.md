@@ -39,7 +39,7 @@ public class A{
     - 规则二：JVM会保证在子类的初始化方法执行前，父类的初始化方法已经执行完毕。所以JVM第一个被执行的类初始化方法一定是java.lang.Object，另外也就意味着对于类中的static语句块，父类优先于子类。
     ```<cinit>与<init> ```：```<cinit> ```方法对应的是类初始化，在类加载的初始化阶段就被执行了；```<init> ```方法对应的是对象初始化，在**调用构造方法**来新建对象的时候执行，用来初始化对象的属性。
 
-      ![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%88%9D%E5%A7%8B%E5%8C%96.png)
+      ![类及对象初始化](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/%E7%B1%BB%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%88%9D%E5%A7%8B%E5%8C%96.png)
 2. 类加载器
  - Bootstrap ClassLoader：启动类加载器由C++编写，随JVM启动。用来加载核心类库，如rt.jar、resource.jar、charsets.jar等，这些jar包的路径也可以通过-Xbootclasspath参数指定。
  - Extension ClassLoader：扩展类加载器，主要用于加载lib/ext目录下的jar包和.class文件。也可以通过系统变量java.ext.dirs指定这个目录。Extension ClassLoader是个Java类，继承自URLClassLoader。
@@ -49,7 +49,7 @@ public class A{
 3. 双亲委派机制：除了顶层的启动类加载器以外，其他类加载器，在加载类之前，都会委派给他的父加载器进行加载。这样一层层向上传递，直到祖先们都无法加载，它才会真正加载。
 4. 打破双亲委派机制的自定义加载器案例
  - 案例一：tomcat：对于加载非基础类，是由一个叫作WebAppClassLoader的类加载器优先加载，等加载不到时候，才会交给上层的ClassLoader进行加载。这个加载器用来隔绝不同应用的.class文件。
- ![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.png)
+ ![tomcat类加载过程](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.png)
  tomcat中WebAppClassLoader加载自己目录下的.class文件，并不会传递给父类加载器，但是可以使用SharedClassLoader所加载的类，实现了共享和分离的功能。
  注意，即使自己写一个基础类，如ArrayList，放在应用目录里，tomcat依然不会加载，这个是因为自定义加载器顺序不同。
  - 案例二：SPI：全称Service Provider Interface，是Java提供的一套用来被第三方实现或者扩展的API，可以用来启用框架扩展和替换组件。如JDBC驱动，一般加载驱动类方式为Class.forName("com.mysql.jdbc.Driver")。但是如果使用mysql-connector-java-8.0.15.jar，即使删除Class.forName代码，也能加载到正确的驱动类。这是因为使用了SPI机制，在jar包下可以找到META-INF/services目录，然后有一个以接口java.sql.Driver为限定名命名的文件，内容为这个接口实现类com.mysql.cj.jdbc.Driver。

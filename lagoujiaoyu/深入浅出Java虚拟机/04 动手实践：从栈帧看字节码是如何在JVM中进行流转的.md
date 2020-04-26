@@ -91,30 +91,30 @@ public class B {
  - 0:aload_0
    把第1个引用型局部变量推到操作数栈，即此处把this装载到了操作数栈中。
    注意，如果是static方法，aload_0表示对方法的第一个参数的操作。
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B1.png)
+![test方法字节码执行过程1](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B1.png)
  - 1:getfield   #2
    将栈顶的指定的对象的第2个实例域(Field)的值压入栈顶。#2就是指成员变量a。
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B2.png)
+![test方法字节码执行过程2](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B2.png)
  - i2l
    将栈顶int类型的数据转化为long类型(隐式转换)
  - lload_1
    将第一个局部变量入栈，即参数num。l表示long
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B3.png)
+![test方法字节码执行过程3](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B3.png)
  - ladd
    把栈顶两个long型数值出栈后相加，并将结果入栈
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B4.png)
+![test方法字节码执行过程4](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B4.png)
  - getstatic    #3
    根据偏移量获取静态属性的值，并把这个值push到操作数栈上
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B5.png)
+![test方法字节码执行过程5](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B5.png)
  - ladd
    再次执行ladd
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B6.png)
+![test方法字节码执行过程6](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B6.png)
  - lstore_3
    把栈顶long型数值存入第4个局部变量，即Slot索引为3的ret
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B7.png)
+![test方法字节码执行过程7](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B7.png)
  - lload_3
    与lstore相反，lstore是将值存入变量；lload_3就是把这个变量ret，压入虚拟机栈中
-![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B8.png)
+![test方法字节码执行过程8](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/test%E6%96%B9%E6%B3%95%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B8.png)
  - lreturn
    从当前方法返回long
 6. 注意上面函数执行过程中，lstore_3和lload_3的作用是将值先存入变量表，然后取出又放入栈，最后出栈返回数据。看似是重复操作，这时因为JVM并不知道变量ret后面是否会用到，但也没必要为了减少JVM的两行命令可以省略掉那个变量，栈的操作复杂的为O(1)。

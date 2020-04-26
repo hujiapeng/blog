@@ -78,7 +78,7 @@ public class PReference {
 ```
  基于虚引用，更加优雅的实现方式就是Java9以后新加入的Cleaner，用来替代Object类的finalizer方法
 4. 典型OOM场景
- ![](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/OOM%E6%83%85%E5%86%B5%E8%A1%A8.png)
+ ![OOM情况表](https://raw.githubusercontent.com/hujiapeng/imgs/master/lagou/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAJava%E8%99%9A%E6%8B%9F%E6%9C%BA/OOM%E6%83%85%E5%86%B5%E8%A1%A8.png)
  引起OOM的原因：
  - 内存容量太小了，需要扩容，或者需要调整堆的空间
  - 错误的引用方式，发生了内存泄漏。没有及时的切断与GC Roots的关系。如线程池里的线程，在使用的情况下忘记清理ThreadLocal的内容。
