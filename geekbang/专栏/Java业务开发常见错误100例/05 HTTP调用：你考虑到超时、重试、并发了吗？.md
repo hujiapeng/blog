@@ -217,6 +217,7 @@ public interface Client {
      - 第二种方式为，配置MaxAutoRetriesNextServer为0
 ```
 ribbon.MaxAutoRetriesNextServer=0
+ribbon.MaxAutoRetries=0
 ```
      - 参数OkToRetryOnAllOperations也是可以配置的，默认为false，自己猜测是因为根据REST服务规范，Get请求可以保证幂等，所以重试没有问题。POST、Put等非幂等的，如果开启这个参数，就要考虑到幂等性问题
      - Ribbon的重试机制用了Spring Cloud的Reactive模式，响应式编程，Observable发布消费模式，可参考LoadBalancerCommand中的如下代码
@@ -225,3 +226,130 @@ ribbon.MaxAutoRetriesNextServer=0
             o = o.retry(retryPolicy(maxRetrysNext, false));
 ```
 4. 并发限制了爬虫的抓取能力
+ - 先直接上Demo
+```
+    @Slf4j
+    @RestController
+    @RequestMapping("routelimit")
+    public class RoutLimitController {
+        static CloseableHttpClient httpClient1;
+        static CloseableHttpClient httpClient2;
+        static {
+            httpClient1 = HttpClients.custom()
+                    .setConnectionManager(new PoolingHttpClientConnectionManager()).build();
+            httpClient2 = HttpClients.custom().setMaxConnPerRoute(10).setMaxConnTotal(20).build();
+    
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    httpClient1.close();
+                } catch (IOException ex) {
+                }
+                try {
+                    httpClient2.close();
+                } catch (IOException ex) {
+                }
+            }));
+        }
+        private int sendRequest(int count, Supplier<CloseableHttpClient> client) throws InterruptedException {
+            AtomicInteger atomicInteger = new AtomicInteger();
+            //注意下面创建线程池方式不推荐使用，本次只是用来测试的
+            ExecutorService threadPool = Executors.newCachedThreadPool();
+            long begin = System.currentTimeMillis();
+            String uri = "http://localhost:8080/routelimit/server";
+            IntStream.rangeClosed(1, count).forEach(i -> {
+                threadPool.execute(() -> {
+                    try (CloseableHttpResponse response = client.get().execute(new HttpGet(uri))) {
+                        atomicInteger.addAndGet(Integer.parseInt(EntityUtils.toString(response.getEntity())));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            });
+            threadPool.shutdown();
+            threadPool.awaitTermination(1, TimeUnit.MINUTES);
+            log.info("发送 {} 次请求，耗时 {} ms", atomicInteger.get(), System.currentTimeMillis() - begin);
+            return atomicInteger.get();
+        }
+        @GetMapping("wrong")
+        public int wrong(@RequestParam(value = "count", defaultValue = "10") int count) throws InterruptedException {
+            return sendRequest(count, () -> httpClient1);
+        }
+        @GetMapping("right")
+        public int right(@RequestParam(value = "count", defaultValue = "10") int count) throws InterruptedException {
+            return sendRequest(count, () -> httpClient2);
+        }
+        @GetMapping("server")
+        public int server() throws InterruptedException {
+            TimeUnit.SECONDS.sleep(1);
+            return 1;
+        }
+    }
+```
+ - 定义了两个CloseableHttpClient对象，httpClient1使用默认配置；httpClient2设置了每个路由(对同一个主机或域名的访问)最大连接数和所有最大连接数
+ - 使用curl命令访问后，查看日志输出，使用httpClient1耗时5105ms，使用httpClient2耗时1033ms，其原因就是PoolingHttpClientConnectionManager中使用的MaxConnPerRoute为2，MaxConnTotal为20。此处因为只访问localhost:8080，所以MaxConnTotal的影响不大，主要是MaxConnPerRoute
+```
+curl http://localhost:8080/routelimit/wrong
+//日志输出
+2020-04-30 14:58:18.739  INFO 4916 --- [nio-8080-exec-5] c.h.h.routlimit.RoutLimitController      : 发送 10 次请求，耗时 5105 ms
+······
+curl http://localhost:8080/routelimit/right
+//日志输出
+2020-04-30 14:44:11.013  INFO 4916 --- [io-8080-exec-10] c.h.h.routlimit.RoutLimitController      : 发送 10 次请求，耗时 1033 ms
+```
+ - 进入PoolingHttpClientConnectionManager源码查看。首先根据new PoolingHttpClientConnectionManager()，进入构造函数，一路跟踪到如下构造函数
+```
+    public PoolingHttpClientConnectionManager(
+······
+        this.pool = new CPool(new InternalConnectionFactory(
+                this.configData, connFactory), 2, 20, timeToLive, timeUnit);
+······
+}
+```
+ - 获取MaxPerRoute的数据就来自CPool
+```
+    public int getDefaultMaxPerRoute() {
+        return this.pool.getDefaultMaxPerRoute();
+    }
+```
+ - 案例中用到了Java8中的Supplier，这个实现了惰性加载，就是在需要的时候再去获取对象，Demo如下
+    - 先看Supplier源码
+```
+    @FunctionalInterface
+    public interface Supplier<T> {
+        T get();
+    }
+```
+    - 定义一个Person类
+```
+   public class Person {
+       private String name;
+       private Integer age;
+   
+       public String getName() {
+           return name;
+       }
+       public void setName(String name) {
+           this.name = name;
+       }
+       public Integer getAge() {
+           return age;
+       }
+       public void setAge(Integer age) {
+           this.age = age;
+       }
+       public static Person testGetPerson() {
+           Person person = new Person();
+           person.setName("hjp");
+           person.setAge(20);
+           return person;
+       }
+   }
+```
+    - 测试方法如下，使用Supplier，只有在get的时候才真正去执行
+```
+     public static void main(String[] args) {
+         Supplier<Person> personSupplier = Person::testGetPerson;
+         Person person = personSupplier.get();
+         System.out.println(person);
+     }
+```
