@@ -18,7 +18,7 @@
 				throw ex;
 			}
 ```
-     - 进入方法completeTransactionAfterThrowing(txInfo, ex)，可看到判断是否抛出异常的代码如下
+    - 进入方法completeTransactionAfterThrowing(txInfo, ex)，可看到判断是否抛出异常的代码如下
 ```
 if (txInfo.transactionAttribute != null && txInfo.transactionAttribute.rollbackOn(ex)) {
 				try {
