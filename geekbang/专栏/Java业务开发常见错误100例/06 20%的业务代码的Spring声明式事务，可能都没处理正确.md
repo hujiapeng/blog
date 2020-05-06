@@ -11,26 +11,26 @@
  - 事务相关源码如下
     - 执行事务方法入口TransactionAspectSupport#invokeWithinTransaction
     - 触发回滚事务的代码在该方法内如下
-```
-			catch (Throwable ex) {
-				// target invocation exception
-				completeTransactionAfterThrowing(txInfo, ex);
-				throw ex;
-			}
-```
+      ```
+         catch (Throwable ex) {
+         	// target invocation exception
+         	completeTransactionAfterThrowing(txInfo, ex);
+         	throw ex;
+         }
+      ```
     - 进入方法completeTransactionAfterThrowing(txInfo, ex)，可看到判断是否抛出异常的代码如下
-```
-if (txInfo.transactionAttribute != null && txInfo.transactionAttribute.rollbackOn(ex)) {
-				try {
-					txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());
-				}
-```
+      ```
+      if (txInfo.transactionAttribute != null && txInfo.transactionAttribute.rollbackOn(ex)) {
+      				try {
+      					txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());
+      				}
+      ```
      - 进入方法txInfo.transactionAttribute.rollbackOn(ex)，即DefaultTransactionAttribute#rollbackOn，可看到根据异常条件处理事务的逻辑
-```
-	public boolean rollbackOn(Throwable ex) {
-		return (ex instanceof RuntimeException || ex instanceof Error);
-	}
-```
+       ```
+       	public boolean rollbackOn(Throwable ex) {
+       		return (ex instanceof RuntimeException || ex instanceof Error);
+       	}
+       ```
 
 三、请确认事务传播配置是否符合自己的业务逻辑
 1. 下面就罗列下Spring事务传播特性吧
