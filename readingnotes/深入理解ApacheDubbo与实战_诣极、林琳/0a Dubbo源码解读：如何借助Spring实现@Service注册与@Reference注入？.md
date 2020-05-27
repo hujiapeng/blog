@@ -149,7 +149,7 @@ private void registerServiceBeans(Set<String> packagesToScan, BeanDefinitionRegi
 ```
    由于代码量的原因，只说重点的几个：
     - ClassPathBeanDefinitionScanner根据scanner设置的条件，通过scan方法注册符合条件的Bean，即将带有注解@Service的类注册成Bean
-    - 通过代码得知带有@Service注解的类是符合scanner注册Bean所需条件的。第一层是isCandidateComponent(MetadataReader metadataReader)，过滤出带有@Service注解的类；第二层是isCandidateComponent(AnnotatedBeanDefinition beanDefinition)，带有@Service注解的类是对立类，并且可直接实例化
+    - 通过代码得知带有@Service注解的类是符合scanner注册Bean所需条件的。第一层是isCandidateComponent(MetadataReader metadataReader)，过滤出带有@Service注解的类；第二层是isCandidateComponent(AnnotatedBeanDefinition beanDefinition)，带有@Service注解的类是独立类，并且可直接实例化
     - 自定义实现ClassPathBeanDefinitionScanner类时，可通过覆盖相应的isCandidateComponent方法实现获取BeanDefinition，用于判断的代码如下：
     ```
 	protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
